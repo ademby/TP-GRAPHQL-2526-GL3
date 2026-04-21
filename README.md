@@ -1,3 +1,10 @@
 # Gestionnaire de CVs - GraphQL
 
-(soon)
+To run the GraphQL server :
+
+    npm install # to install dependencies
+    npm run dev # to launch application
+
+Open this link in your browser :
+
+    http://localhost:4000/graphql
