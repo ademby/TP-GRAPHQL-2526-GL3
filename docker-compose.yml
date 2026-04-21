@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres-db:
     image: postgres:15
-    container_name: nest-cv-postgres
+    container_name: graphQL-cv-postgres
     restart: always
     environment:
       POSTGRES_USER: root
