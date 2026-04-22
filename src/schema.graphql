@@ -1,3 +1,79 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+type Role {
+  id: ID!
+  name: String!
+}
+
+type User {
+  id: Int!
+  username: String!
+  email: String!
+  roles: [Role]!
+}
+
+type Skill {
+  id: ID!
+  designation: String!
+}
+
+type Cv {
+  id: ID!
+  name: String!
+  age: Int!
+  job: String!
+  owner: User!
+  skills: [Skill!]!
+}
+
+input CreateCvInput {
+  name: String!
+  age: Int!
+  job: String!
+  ownerId: ID!
+  skillIds: [ID!]!
+}
+
+input UpdateCvInput {
+  name: String
+  age: Int
+  job: String
+  ownerId: ID!
+  skillIds: [ID]
+}
+
+enum OperationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type CvOperation {
+  operation: OperationType!
+  cv: Cv!
+}
+
 type Query {
-  hello: String
+  users: [User!]!
+  user(id: ID!): User
+
+  skills: [Skill!]!
+  skill(id: ID!): Skill
+
+  cvs: [Cv!]!
+  cv(id: ID!): Cv
+}
+
+type Mutation {
+  createCv(input: CreateCvInput!): Cv!
+  updateCv(id: ID!, input: UpdateCvInput!): Cv! # juste une remqrque : using one update mutation is not optimal [complex control logic]
+  removeCv(id: ID!): Boolean!
+}
+
+type Subscription {
+  cvChanged: CvOperation!
 }
