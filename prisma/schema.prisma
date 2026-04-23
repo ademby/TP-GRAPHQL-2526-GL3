@@ -16,3 +16,11 @@ model Link {
   description String
   url         String
 }
+
+model Link2 {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  description String
+  url         String
+  author      String
+}
