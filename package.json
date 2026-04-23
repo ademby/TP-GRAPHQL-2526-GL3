@@ -13,7 +13,10 @@
   "version": "1.0.0",
   "description": "(soon)",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "@prisma/client": "6.0.1",
+    "prisma": "6.0.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
