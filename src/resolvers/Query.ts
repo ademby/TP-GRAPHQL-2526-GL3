@@ -1,6 +1,9 @@
-export const Query = {
-  cv: (parent, {id}, {db} , info) => {
-    return db.cvs.find((cv) => cv.id === id);
+import { QueryResolvers } from "../generated/graphql";
+
+
+export const Query : QueryResolvers = {
+  cv: (parent, { id }, context) => {
+    return context.db.cvs.find((cv) => cv.id === id) ?? null;
   },
-  cvs: (parent, {}, {db}, info) => db.cvs, 
+  cvs: (parent, {}, context) => context.db.cvs,
 };

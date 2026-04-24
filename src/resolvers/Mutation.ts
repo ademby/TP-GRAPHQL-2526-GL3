@@ -1,6 +1,7 @@
+import { MutationResolvers } from "../generated/graphql";
 import { validateCvInput, validateCvId } from "../validators/Cv";
 
-export const Mutation = {
+export const Mutation : MutationResolvers= {
   createCv: (parent, { input }, { db, pubSub }, info) => {
     // validate user and skills
     validateCvInput(input, db);

@@ -1,4 +1,6 @@
-export const Cv = {
+import { CvResolvers } from "../generated/graphql";
+
+export const Cv : CvResolvers= {
   owner: (parent, args, { db }, info) => {
     return db.users.find((user) => user.id === parent.owner);
   },

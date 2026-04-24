@@ -58,12 +58,6 @@ type CvOperation {
 }
 
 type Query {
-  users: [User!]!
-  user(id: ID!): User
-
-  skills: [Skill!]!
-  skill(id: ID!): Skill
-
   cvs: [Cv!]!
   cv(id: ID!): Cv
 }
