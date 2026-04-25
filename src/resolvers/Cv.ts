@@ -1,10 +1,14 @@
-export const Cv = {
-  owner: (parent, args, { db }, info) => {
-    return db.users.find((user) => user.id === parent.owner);
-  },
-  skills: (parent, args, { db }, info) => {
-    return parent.skills.map((skillId) =>
-      db.skills.find((skill) => skill.id === skillId),
-    );
-  },
+import { CvResolvers } from "../generated/graphql";
+
+export const Cv: CvResolvers = {
+  owner: (parent, args, context, info) =>
+    context.prisma.user.findUnique({ where: { id: parent.ownerId } }),
+  skills: (parent, args, context, info) =>
+    context.prisma.skill.findMany({
+      where: {
+        cvs: {
+          some: { id: parent.id },
+        },
+      },
+    }),
 };

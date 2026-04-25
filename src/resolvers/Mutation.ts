@@ -1,40 +1,63 @@
-import { validateCvInput, validateCvId } from "../validators/Cv";
+import { MutationResolvers, OperationType } from "../generated/graphql";
+import { validateCvId, validateCvInput } from "../validators/Cv";
 
-export const Mutation = {
-  createCv: (parent, { input }, { db, pubSub }, info) => {
-    // validate user and skills
-    validateCvInput(input, db);
-    // addition
-    let { ownerId, skillIds, ...cv } = input;
-    cv.id = db.cvs.length + 1;
-    cv.owner = ownerId;
-    cv.skills = skillIds;
-    db.cvs.push(cv);
+export const Mutation: MutationResolvers = {
+  createCv: async (parent, { input }, context, info) => {
+    await validateCvInput(input, context.prisma);
 
-    pubSub.publish("CV_CHANGED", { operation: "CREATED", cv: cv });
+    const cv = await context.prisma.cv.create({
+      data: {
+        name: input.name,
+        age: input.age,
+        job: input.job,
+        owner: { connect: { id: input.ownerId } },
+        skills: { connect: input.skillIds.map((id) => ({ id })) },
+      },
+    });
+
+    context.pubSub.publish("CV_CHANGED", {
+      operation: OperationType.Created,
+      cv,
+    });
     return cv;
   },
-  updateCv: (parent, { id, input }, { db, pubSub }, info) => {
-    // validate cvId
-    const cvIndex = validateCvId(id, db);
-    // validate user and skills
-    validateCvInput(input, db);
-    // update
-    let { ownerId, skillIds, ...cv } = { ...db.cvs[cvIndex], ...input };
-    cv.owner = ownerId;
-    cv.skills = skillIds;
-    db.cvs[cvIndex] = cv;
 
-    pubSub.publish("CV_CHANGED", { operation: "UPDATED", cv: cv });
+  updateCv: async (parent, { id, input }, context, info) => {
+    await validateCvId(id, context.prisma);
+    await validateCvInput(input, context.prisma);
+
+    const cv = await context.prisma.cv.update({
+      where: { id },
+      data: {
+        name: input.name ?? undefined,
+        age: input.age ?? undefined,
+        job: input.job ?? undefined,
+        owner: input.ownerId ? { connect: { id: input.ownerId } } : undefined,
+        skills: input.skillIds
+          ? {
+              set: input.skillIds
+                .filter((skillId): skillId is string => !!skillId)
+                .map((skillId) => ({ id: skillId })),
+            }
+          : undefined,
+      },
+    });
+
+    context.pubSub.publish("CV_CHANGED", {
+      operation: OperationType.Updated,
+      cv,
+    });
     return cv;
   },
-  removeCv: (parent, { id }, { db, pubSub }, info) => {
-    // validate cvId
-    const cvIndex = validateCvId(id, db);
-    // Implementation for removing CV
-    const cv = db.cvs[cvIndex];
-    db.cvs.splice(cvIndex, 1);
-    pubSub.publish("CV_CHANGED", { operation: "DELETED", cv: cv });
+
+  removeCv: async (parent, { id }, context, info) => {
+    await validateCvId(id, context.prisma);
+
+    const cv = await context.prisma.cv.delete({ where: { id } });
+    context.pubSub.publish("CV_CHANGED", {
+      operation: OperationType.Deleted,
+      cv,
+    });
     return true;
   },
 };
