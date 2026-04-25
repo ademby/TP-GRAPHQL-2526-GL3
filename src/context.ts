@@ -7,7 +7,7 @@ export type GraphQLContext = {
 };
 
 const PubSub = createPubSub(); // refactor : change logic to have a centralized pubSub Logic (graph)
-const prisma = new PrismaClient(); // notre ORM
+const prisma = new PrismaClient({ log: ["query"] }); // notre ORM
 
 export async function createContext(): Promise<GraphQLContext> {
   return { pubSub: PubSub, prisma };
