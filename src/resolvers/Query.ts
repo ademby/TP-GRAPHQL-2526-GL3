@@ -1,9 +1,9 @@
+import { PrismaClient } from "@prisma/client";
 import { QueryResolvers } from "../generated/graphql";
 
-
-export const Query : QueryResolvers = {
-  cv: (parent, { id }, context) => {
-    return context.db.cvs.find((cv) => cv.id === id) ?? null;
-  },
-  cvs: (parent, {}, context) => context.db.cvs,
+export const Query: QueryResolvers = {
+  cv: (parent, { id }, context) =>
+    context.prisma.cv.findUnique({ where: { id } }),
+  cvs: (parent, {}, context: { prisma: PrismaClient }) =>
+    context.prisma.cv.findMany(),
 };

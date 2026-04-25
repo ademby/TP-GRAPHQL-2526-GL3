@@ -1,4 +1,10 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { GraphQLResolveInfo } from "graphql";
+import {
+  Cv as Cv_prisma,
+  User as User_prisma,
+  Skill as Skill_prisma,
+  Role as Role_prisma,
+} from "@prisma/client";
 import { GraphQLContext } from '../context';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
@@ -7,6 +13,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -89,6 +96,7 @@ export type Role = {
 
 export type Skill = {
   __typename?: 'Skill';
+  cvs: Array<Cv>;
   designation: Scalars['String']['output'];
   id: Scalars['ID']['output'];
 };
@@ -102,12 +110,13 @@ export type UpdateCvInput = {
   age?: InputMaybe<Scalars['Int']['input']>;
   job?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  ownerId: Scalars['ID']['input'];
-  skillIds?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
+  ownerId?: InputMaybe<Scalars['ID']['input']>;
+  skillIds?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
 export type User = {
   __typename?: 'User';
+  cvs: Array<Cv>;
   email: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   roles: Array<Maybe<Role>>;
@@ -189,37 +198,37 @@ export type DirectiveResolverFn<TResult = Record<PropertyKey, never>, TParent = 
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CreateCvInput: CreateCvInput;
-  Cv: ResolverTypeWrapper<Cv>;
-  CvOperation: ResolverTypeWrapper<CvOperation>;
+  Cv: ResolverTypeWrapper<Cv_prisma>;
+  CvOperation: ResolverTypeWrapper<Omit<CvOperation, 'cv'> & { cv: ResolversTypes['Cv'] }>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Mutation: ResolverTypeWrapper<Record<PropertyKey, never>>;
   OperationType: OperationType;
   Query: ResolverTypeWrapper<Record<PropertyKey, never>>;
-  Role: ResolverTypeWrapper<Role>;
-  Skill: ResolverTypeWrapper<Skill>;
+  Role: ResolverTypeWrapper<Role_prisma>;
+  Skill: ResolverTypeWrapper<Skill_prisma>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<Record<PropertyKey, never>>;
   UpdateCvInput: UpdateCvInput;
-  User: ResolverTypeWrapper<User>;
+  User: ResolverTypeWrapper<User_prisma>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   CreateCvInput: CreateCvInput;
-  Cv: Cv;
-  CvOperation: CvOperation;
+  Cv: Cv_prisma;
+  CvOperation: Omit<CvOperation, 'cv'> & { cv: ResolversParentTypes['Cv'] };
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Mutation: Record<PropertyKey, never>;
   Query: Record<PropertyKey, never>;
-  Role: Role;
-  Skill: Skill;
+  Role: Role_prisma;
+  Skill: Skill_prisma;
   String: Scalars['String']['output'];
   Subscription: Record<PropertyKey, never>;
   UpdateCvInput: UpdateCvInput;
-  User: User;
+  User: User_prisma;
 };
 
 export type CvResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Cv'] = ResolversParentTypes['Cv']> = {
@@ -253,6 +262,7 @@ export type RoleResolvers<ContextType = GraphQLContext, ParentType extends Resol
 };
 
 export type SkillResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['Skill'] = ResolversParentTypes['Skill']> = {
+  cvs?: Resolver<Array<ResolversTypes['Cv']>, ParentType, ContextType>;
   designation?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
@@ -262,6 +272,7 @@ export type SubscriptionResolvers<ContextType = GraphQLContext, ParentType exten
 };
 
 export type UserResolvers<ContextType = GraphQLContext, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
+  cvs?: Resolver<Array<ResolversTypes['Cv']>, ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   roles?: Resolver<Array<Maybe<ResolversTypes['Role']>>, ParentType, ContextType>;

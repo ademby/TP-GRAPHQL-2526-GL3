@@ -14,11 +14,13 @@ type User {
   username: String!
   email: String!
   roles: [Role]!
+  cvs: [Cv!]!
 }
 
 type Skill {
   id: ID!
   designation: String!
+  cvs: [Cv!]!
 }
 
 type Cv {
@@ -42,8 +44,8 @@ input UpdateCvInput {
   name: String
   age: Int
   job: String
-  ownerId: ID!
-  skillIds: [ID]
+  ownerId: ID
+  skillIds: [ID!]
 }
 
 enum OperationType {
@@ -64,7 +66,7 @@ type Query {
 
 type Mutation {
   createCv(input: CreateCvInput!): Cv!
-  updateCv(id: ID!, input: UpdateCvInput!): Cv! # juste une remqrque : using one update mutation is not optimal [complex control logic]
+  updateCv(id: ID!, input: UpdateCvInput!): Cv!
   removeCv(id: ID!): Boolean!
 }
 

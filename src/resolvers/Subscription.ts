@@ -1,8 +1,9 @@
-import { SubscriptionResolver } from "../generated/graphql";
+import { SubscriptionResolvers } from "../generated/graphql";
 
-export const Subscription : SubscriptionResolver = {
+export const Subscription: SubscriptionResolvers = {
   cvChanged: {
-    subscribe: (parent, {}, { pubSub }) => pubSub.subscribe("CV_CHANGED"),
+    subscribe: (parent, args, context, info) =>
+      context.pubSub.subscribe("CV_CHANGED"),
     resolve: (payload) => payload,
   },
 };
