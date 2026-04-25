@@ -24,7 +24,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "cross-env NODE_ENV=development ts-node-dev --exit-child --respawn src/main.ts",
     "start": "ts-node src/main.ts",
-    "codegen": "graphql-codegen --config codegen.ts"
+    "codegen": "graphql-codegen --config codegen.ts",
+    "db:seed": "ts-node prisma/db-seed.ts",
+    "db:clear": "ts-node prisma/db-clear.ts",
+    "db:migrate": "prisma migrate dev && prisma generate"
   },
   "repository": {
     "type": "git",
