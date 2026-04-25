@@ -8,6 +8,12 @@ const config: CodegenConfig = {
       plugins: ["typescript", "typescript-resolvers"],
       config: {
         contextType: "../context#GraphQLContext",
+        mappers: {
+          Cv: "@prisma/client#Cv_prisma",
+          User: "@prisma/client#User_prisma",
+          Skill: "@prisma/client#Skill_prisma",
+          Role: "@prisma/client#Role_prisma",
+        },
       },
     },
   },
